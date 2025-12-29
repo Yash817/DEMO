@@ -896,11 +896,15 @@
                     
                     if (query.length === 0) {
                         resultsBox.classList.remove('active');
+                        // Fix for mobile: Hide using Tailwind class
+                        if(index === 1) resultsBox.classList.add('hidden'); 
                         resultsBox.innerHTML = '';
                         return;
                     }
 
                     resultsBox.classList.add('active');
+                    // Fix for mobile: Show by removing Tailwind class
+                    if(index === 1) resultsBox.classList.remove('hidden');
                     
                     // Simulate AI Thinking
                     resultsBox.innerHTML = `
@@ -949,6 +953,7 @@
                                         openProductDetail(product);
                                         // Clear search
                                         resultsBox.classList.remove('active');
+                                        if(index === 1) resultsBox.classList.add('hidden'); // Also hide mobile
                                         input.value = '';
                                     }
                                 });
