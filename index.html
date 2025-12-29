@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GIFTORA | Premium Gifting Experience</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Custom Config for Tailwind -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#fff1f2',
+                            100: '#ffe4e6',
+                            500: '#f43f5e',
+                            600: '#e11d48',
+                            700: '#be123c',
+                            900: '#881337',
+                        },
+                        gold: {
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                        },
+                        dark: {
+                            900: '#0f172a',
+                            950: '#020617',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                        cinematic: ['Cinzel', 'serif'],
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'float': 'float 6s ease-in-out infinite',
+                        'float-delayed': 'float 6s ease-in-out 3s infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'shimmer': 'shimmer 2.5s linear infinite',
+                        'confetti': 'confettiDrop 4s linear infinite',
+                        'shake': 'shake 0.5s cubic-bezier(.36,.07,.19,.97) both infinite',
+                        'twinkle': 'twinkle 2s ease-in-out infinite',
+                        'warp': 'warp 0.2s linear infinite',
+                        'spin-slow': 'spin 10s linear infinite',
+                        'spin-reverse': 'spin 15s linear infinite reverse',
+                    },
+                    keyframes: {
+                        shimmer: {
+                            '0%': { backgroundPosition: '-1000px 0' },
+                            '100%': { backgroundPosition: '1000px 0' }
+                        },
+                        confettiDrop: {
+                            '0%': { transform: 'translateY(-100vh) rotate(0deg)' },
+                            '100%': { transform: 'translateY(100vh) rotate(360deg)' }
+                        },
+                        shake: {
+                            '10%, 90%': { transform: 'translate3d(-1px, 0, 0) rotate(1deg)' },
+                            '20%, 80%': { transform: 'translate3d(2px, 0, 0) rotate(-1deg)' },
+                            '30%, 50%, 70%': { transform: 'translate3d(-4px, 0, 0) rotate(2deg)' },
+                            '40%, 60%': { transform: 'translate3d(4px, 0, 0) rotate(-2deg)' }
+                        },
+                        twinkle: {
+                            '0%, 100%': { opacity: 0.2, transform: 'scale(0.8)' },
+                            '50%': { opacity: 1, transform: 'scale(1.2)' }
+                        },
+                        warp: {
+                            '0%': { transform: 'translateZ(0) translateY(0)', opacity: 0 },
+                            '50%': { opacity: 1 },
+                            '100%': { transform: 'translateZ(200px) translateY(100px)', opacity: 0 }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&display=swap');
+
+        :root {
+            --box-size: 100px;
+        }
+        @media (min-width: 768px) {
+            :root {
+                --box-size: 140px;
+            }
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #fff1f2;
+            color: #4c0519;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, .serif-font {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .cinematic-font {
+            font-family: 'Cinzel', serif;
+        }
+
+        /* --- CINEMATIC PRELOADER --- */
+        #preloader {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at center, #9f1239 0%, #020617 80%);
+            overflow: hidden;
+            perspective: 1000px;
+        }
+        
+        #preloader::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(transparent 50%, black 100%);
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* Outer Orbit Animation - Improved */
+        .orbit-ring {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 15;
+            box-shadow: 0 0 15px rgba(251, 191, 36, 0.2);
+        }
+        .orbit-1 { 
+            width: 320px; 
+            height: 320px; 
+            border: 1px solid rgba(251, 191, 36, 0.4);
+            border-top: 2px solid #fbbf24;
+            animation: spin-slow 8s linear infinite; 
+        }
+        .orbit-2 { 
+            width: 480px; 
+            height: 480px; 
+            border: 1px solid rgba(244, 63, 94, 0.3);
+            border-bottom: 2px solid #f43f5e;
+            animation: spin-reverse 12s linear infinite; 
+        }
+        .orbit-3 {
+            width: 600px;
+            height: 600px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-left: 2px solid rgba(255, 255, 255, 0.5);
+            animation: spin-slow 20s linear infinite;
+        }
+
+        /* Warp Speed Stars */
+        .warp-star {
+            position: absolute;
+            width: 2px;
+            height: 50px;
+            background: linear-gradient(to bottom, transparent, #fff, transparent);
+            opacity: 0;
+            transform-origin: center;
+            z-index: 5;
+        }
+        .warp-active .warp-star {
+            animation: warp 0.5s linear infinite;
+        }
+
+        .flash-overlay {
+            position: absolute;
+            inset: 0;
+            background: white;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 200;
+            transition: opacity 0.1s ease-out;
+        }
+        .flash-overlay.active { opacity: 1; }
+
+        .curtain-panel {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 50%;
+            background: #020617;
+            z-index: 100;
+            transition: transform 1.5s cubic-bezier(0.87, 0, 0.13, 1);
+        }
+        .curtain-left { left: 0; transform: translateX(-100%); border-right: 1px solid #1e293b; } 
+        .curtain-right { right: 0; transform: translateX(100%); border-left: 1px solid #1e293b; } 
+
+        #preloader.credits-mode { background: #000000; }
+        #preloader.reveal-mode .curtain-left { transform: translateX(-100%) !important; }
+        #preloader.reveal-mode .curtain-right { transform: translateX(100%) !important; }
+        #preloader.gone { display: none; }
+
+        /* 3D Gift Styles */
+        #gift-stage {
+            perspective: 1000px;
+            opacity: 1;
+            transition: opacity 0.3s, transform 0.5s cubic-bezier(0.7, 0, 0.84, 0);
+            transform-style: preserve-3d;
+            z-index: 20;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        #gift-stage.zooming { transform: scale(8) translateZ(500px); opacity: 0; }
+        #gift-stage.hidden { opacity: 0; pointer-events: none; display: none; }
+
+        .gift-container {
+            width: var(--box-size);
+            height: var(--box-size);
+            transform-style: preserve-3d;
+            margin-bottom: 3rem;
+        }
+        
+        .gift-box {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: spin-gift 4s infinite linear;
+        }
+        
+        .gift-face {
+            position: absolute;
+            width: var(--box-size);
+            height: var(--box-size);
+            background: radial-gradient(circle, #fbbf24 30%, #b45309 100%);
+            border: 1px solid #92400e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.6); 
+        }
+
+        .gift-face::before, .gift-face::after {
+            content: '';
+            position: absolute;
+            background: linear-gradient(to bottom, #f43f5e, #be123c);
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+        .gift-face::before { width: 25%; height: 100%; }
+        .gift-face::after { width: 100%; height: 25%; }
+
+        .front  { transform: rotateY(0deg) translateZ(calc(var(--box-size) / 2)); }
+        .back   { transform: rotateY(180deg) translateZ(calc(var(--box-size) / 2)); }
+        .right  { transform: rotateY(90deg) translateZ(calc(var(--box-size) / 2)); }
+        .left   { transform: rotateY(-90deg) translateZ(calc(var(--box-size) / 2)); }
+        .top    { transform: rotateX(90deg) translateZ(calc(var(--box-size) / 2)); background: #fcd34d; }
+        .bottom { transform: rotateX(-90deg) translateZ(calc(var(--box-size) / 2)); }
+
+        @keyframes spin-gift {
+            0% { transform: rotateX(-15deg) rotateY(0deg); }
+            100% { transform: rotateX(-15deg) rotateY(360deg); }
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 15px 2px #fbbf24;
+            animation: twinkle 2s infinite ease-in-out;
+        }
+
+        #credits-stage {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            z-index: 150;
+            pointer-events: none;
+            padding: 20px;
+        }
+        #credits-stage.visible { opacity: 1; }
+
+        .cinematic-text {
+            text-align: center;
+            color: white;
+            opacity: 0;
+            transform: scale(1.1);
+            filter: blur(10px);
+            transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+            width: 100%;
+        }
+        .cinematic-text.in { opacity: 1; transform: scale(1); filter: blur(0px); }
+
+        .gold-gradient-text {
+            background: linear-gradient(to bottom, #fbbf24, #d97706, #fbbf24);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 30px rgba(251, 191, 36, 0.3);
+        }
+
+        /* --- SEARCH BOX STYLES --- */
+        #search-container {
+            position: relative;
+            z-index: 50;
+        }
+        #search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            margin-top: 0.5rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border-radius: 1rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            max-height: 400px;
+            overflow-y: auto;
+            opacity: 0;
+            transform: translateY(-10px);
+            pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        #search-results.active {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        .ai-pulse {
+            width: 8px;
+            height: 8px;
+            background-color: #e11d48;
+            border-radius: 50%;
+            display: inline-block;
+            animation: pulse-slow 1s infinite;
+        }
+
+        /* General UI Helpers */
+        @keyframes float { 0%, 100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-20px) rotate(5deg); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(40px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 1s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .perspective-1000 { perspective: 1000px; }
+        .preserve-3d { transform-style: preserve-3d; }
+        #mobile-menu { transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        #mobile-menu.open { transform: translateX(0); }
+        #mobile-menu.closed { transform: translateX(100%); }
+        .glass-panel { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.5); }
+        .confetti-piece { position: absolute; width: 10px; height: 10px; background: #ffd700; top: -10px; z-index: 1; }
+    </style>
+</head>
+<body class="antialiased selection:bg-brand-500 selection:text-white">
+
+    <!-- ========================================= -->
+    <!-- CINEMATIC PRELOADER -->
+    <!-- ========================================= -->
+    <div id="preloader">
+        <div class="flash-overlay"></div>
+        
+        <!-- Warp Starfield -->
+        <div id="warp-container" class="absolute inset-0 pointer-events-none"></div>
+
+        <!-- Curtains -->
+        <div class="curtain-panel curtain-left bg-black" id="curtain-left"></div>
+        <div class="curtain-panel curtain-right bg-black" id="curtain-right"></div>
+
+        <!-- STAGE 1: 3D GIFT BOX & SPARKLES -->
+        <div id="gift-stage" class="relative">
+            <!-- Orbital Rings for "Outer Animation" -->
+            <div class="orbit-ring orbit-1 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
+            <div class="orbit-ring orbit-2 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
+            <div class="orbit-ring orbit-3 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
+
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px] h-[200px] pointer-events-none z-0">
+                <div class="sparkle top-0 left-0"></div>
+                <div class="sparkle top-10 right-0" style="animation-delay: 0.5s"></div>
+                <div class="sparkle bottom-0 left-10" style="animation-delay: 1s"></div>
+                <div class="sparkle bottom-10 right-10" style="animation-delay: 1.5s"></div>
+            </div>
+
+            <!-- Spotlight Glow -->
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(251,191,36,0.3)_0%,_transparent_70%)] pointer-events-none scale-[2]"></div>
+
+            <div class="gift-container z-10 mx-auto">
+                <div class="gift-box" id="gift-box-el">
+                    <div class="gift-face front"></div>
+                    <div class="gift-face back"></div>
+                    <div class="gift-face right"></div>
+                    <div class="gift-face left"></div>
+                    <div class="gift-face top"></div>
+                    <div class="gift-face bottom"></div>
+                </div>
+            </div>
+            
+            <div class="text-center z-10 px-4">
+                <h2 class="text-gold-400 text-lg md:text-xl font-cinematic font-bold tracking-[0.3em] uppercase mb-6 drop-shadow-[0_0_10px_rgba(251,191,36,0.5)]">Preparing Magic...</h2>
+                <div class="w-32 md:w-48 h-1 bg-brand-900/50 rounded-full overflow-hidden mx-auto shadow-[0_0_15px_rgba(251,191,36,0.3)]">
+                    <div id="loader-bar" class="h-full bg-gradient-to-r from-gold-400 via-gold-500 to-gold-400 w-0 transition-all duration-[2000ms] ease-out shadow-[0_0_10px_#fbbf24]"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STAGE 2: CREDITS -->
+        <div id="credits-stage">
+            <div id="credit-line-1" class="cinematic-text mb-4 md:mb-6">
+                <p class="text-gray-400 text-[10px] md:text-sm tracking-[0.4em] uppercase font-medium font-sans">A Digital Experience</p>
+            </div>
+            
+            <div id="credit-line-2" class="cinematic-text mb-6 md:mb-8">
+                <h1 class="text-3xl sm:text-5xl md:text-7xl font-cinematic font-black tracking-widest gold-gradient-text uppercase leading-tight">
+                    PIXCELYASH<br/><span class="text-white text-2xl sm:text-4xl md:text-5xl tracking-[0.2em]">.SPACE</span>
+                </h1>
+            </div>
+
+            <div id="credit-line-3" class="cinematic-text mt-4 md:mt-8 relative px-4">
+                <div class="h-px w-12 md:w-24 bg-gradient-to-r from-transparent via-white/40 to-transparent mx-auto mb-4"></div>
+                <p class="text-sm sm:text-lg md:text-xl text-gray-300 font-serif italic tracking-wide">
+                    "Visit my website for more details"
+                </p>
+                <div class="h-px w-12 md:w-24 bg-gradient-to-r from-transparent via-white/40 to-transparent mx-auto mt-4"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================= -->
+    <!-- NAVBAR -->
+    <!-- ========================================= -->
+    <nav id="navbar" class="fixed top-0 w-full z-40 transition-all duration-300 py-6 bg-transparent">
+        <div class="max-w-7xl mx-auto px-4 md:px-6 flex items-center justify-between">
+            <!-- Logo -->
+            <div class="flex items-center gap-3 cursor-pointer group select-none" onclick="switchTab('home')">
+                <div class="relative w-10 h-10 flex-shrink-0">
+                    <div class="absolute inset-0 bg-brand-600 rounded-lg rotate-0 group-hover:rotate-45 transition-transform duration-500 ease-out shadow-lg shadow-brand-200"></div>
+                    <div class="absolute inset-0 flex items-center justify-center text-white font-serif font-bold text-xl z-10">G</div>
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-serif font-bold text-2xl tracking-tight leading-none text-brand-900">GIFTORA</span>
+                    <span class="text-[10px] font-sans font-bold uppercase tracking-[0.25em] text-brand-500">Luxury Gifting</span>
+                </div>
+            </div>
+
+            <!-- AI Search (Desktop) -->
+            <div id="search-container" class="hidden md:block w-1/3 relative">
+                <div class="flex items-center bg-white/60 backdrop-blur-md rounded-full px-5 py-2.5 border border-white/50 focus-within:border-brand-300 focus-within:bg-white focus-within:ring-2 focus-within:ring-brand-100 transition-all shadow-sm">
+                    <div class="relative">
+                        <i data-lucide="sparkles" class="text-brand-500 mr-3 animate-pulse" width="18"></i>
+                    </div>
+                    <input id="search-input" type="text" placeholder="Ask AI: 'Gifts for dad'..." class="bg-transparent border-none outline-none w-full text-sm placeholder-brand-300 text-brand-900">
+                </div>
+                
+                <!-- Search Results Dropdown -->
+                <div id="search-results" class="p-2">
+                    <!-- Dynamic Content -->
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex items-center gap-3 md:gap-6">
+                <div class="hidden md:flex bg-white/50 backdrop-blur-sm rounded-full p-1 text-xs font-semibold border border-brand-100">
+                    <button onclick="switchTab('home')" class="role-btn px-4 py-1.5 rounded-full capitalize transition-all duration-300 bg-white shadow-sm text-brand-600" data-role="home">Shop</button>
+                    <button onclick="switchTab('seller')" class="role-btn px-4 py-1.5 rounded-full capitalize transition-all duration-300 hover:bg-brand-50 text-brand-400" data-role="seller">Vendor</button>
+                    <button onclick="switchTab('admin')" class="role-btn px-4 py-1.5 rounded-full capitalize transition-all duration-300 hover:bg-brand-50 text-brand-400" data-role="admin">Admin</button>
+                </div>
+
+                <div class="relative cursor-pointer hover:text-brand-600 text-brand-800 transition-colors group p-2">
+                    <div class="group-hover:animate-bounce">
+                        <i data-lucide="gift" width="24"></i>
+                    </div>
+                    <span id="cart-count" class="absolute top-0 right-0 bg-gold-500 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full font-bold transform scale-0 transition-transform duration-300 border-2 border-white shadow-sm">0</span>
+                </div>
+                
+                <div class="cursor-pointer hover:text-brand-600 text-brand-800 transition-colors md:hidden p-2" onclick="toggleMobileMenu()">
+                    <i data-lucide="menu" width="28"></i>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MOBILE SEARCH (Added for Responsiveness) -->
+    <div class="md:hidden fixed top-20 left-0 right-0 px-4 z-30 transition-all duration-300" id="mobile-search-bar">
+        <div class="relative">
+            <div class="flex items-center bg-white/90 backdrop-blur-md rounded-full px-5 py-3 border border-brand-100 shadow-lg">
+                <i data-lucide="sparkles" class="text-brand-500 mr-3" width="18"></i>
+                <input id="mobile-search-input" type="text" placeholder="Ask AI..." class="bg-transparent border-none outline-none w-full text-sm placeholder-brand-300 text-brand-900">
+            </div>
+            <div id="mobile-search-results" class="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-2xl p-2 hidden border border-brand-50"></div>
+        </div>
+    </div>
+
+    <!-- ... (MAIN CONTENT SECTIONS) ... -->
+    <main class="pt-32 md:pt-24 min-h-screen">
+        
+        <!-- PRODUCT DETAIL VIEW (New Section) -->
+        <div id="view-product-detail" class="view-section hidden container mx-auto px-6 py-12 animate-fade-in-up">
+            <button onclick="switchTab('home')" class="mb-6 flex items-center gap-2 text-brand-600 hover:text-brand-800 font-bold transition-colors">
+                <i data-lucide="arrow-left"></i> Back to Shop
+            </button>
+            <div class="bg-white rounded-3xl shadow-2xl overflow-hidden border border-brand-50 grid md:grid-cols-2">
+                <!-- Image Side -->
+                <div class="bg-brand-50 p-12 flex items-center justify-center relative overflow-hidden group">
+                    <div class="absolute inset-0 bg-brand-100/50 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="w-64 h-64 bg-white rounded-full flex items-center justify-center shadow-lg relative z-10">
+                        <i id="detail-icon" data-lucide="gift" class="w-32 h-32 text-brand-500"></i>
+                    </div>
+                </div>
+                <!-- Info Side -->
+                <div class="p-8 md:p-12 flex flex-col justify-center">
+                    <span id="detail-tag" class="bg-brand-100 text-brand-600 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider w-fit mb-4">Bestseller</span>
+                    <h1 id="detail-title" class="text-4xl font-serif font-bold text-brand-900 mb-4">Product Title</h1>
+                    <p id="detail-price" class="text-3xl font-bold text-gold-500 mb-6">₹599</p>
+                    <p id="detail-desc" class="text-gray-600 leading-relaxed mb-8">
+                        AI Generated Description goes here...
+                    </p>
+                    
+                    <div class="flex gap-4">
+                        <button onclick="alert('Proceeding to Checkout...')" class="flex-1 bg-brand-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-brand-700 transition-all shadow-lg shadow-brand-600/30 flex items-center justify-center gap-2">
+                            Buy Now <i data-lucide="arrow-right" width="20"></i>
+                        </button>
+                        <button class="p-4 border border-brand-200 rounded-xl hover:bg-brand-50 text-brand-600">
+                            <i data-lucide="heart" width="24"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- HOME VIEW -->
+        <div id="view-home" class="view-section block">
+            <!-- Hero Section -->
+            <section id="hero" class="relative min-h-[85vh] flex items-center overflow-visible mb-12">
+                 <!-- Background Confetti -->
+                 <div class="absolute inset-0 overflow-hidden pointer-events-none">
+                    <div class="confetti-piece left-[10%] animate-confetti" style="background: #f43f5e; animation-duration: 3s;"></div>
+                    <div class="confetti-piece left-[50%] animate-confetti" style="background: #e11d48; animation-duration: 3.5s; animation-delay: 0.5s;"></div>
+                    <div class="confetti-piece left-[90%] animate-confetti" style="background: #f43f5e; animation-duration: 4.5s; animation-delay: 1.5s;"></div>
+                </div>
+                <!-- Gradients -->
+                <div class="absolute top-[-20%] right-[-10%] w-[300px] md:w-[700px] h-[300px] md:h-[700px] bg-rose-200/50 rounded-full blur-[80px] md:blur-[120px] -z-10 animate-pulse-slow"></div>
+                <div class="absolute bottom-[-10%] left-[-10%] w-[300px] md:w-[600px] h-[300px] md:h-[600px] bg-gold-200/40 rounded-full blur-[80px] md:blur-[100px] -z-10"></div>
+
+                <div class="container mx-auto px-6 grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+                    <div id="hero-text" class="space-y-6 md:space-y-8 relative z-10 text-center lg:text-left">
+                        <div class="inline-flex items-center gap-2 bg-white border border-rose-100 text-brand-600 px-4 py-2 rounded-full text-[10px] md:text-xs font-bold tracking-widest uppercase shadow-sm animate-fade-in-up">
+                            <span class="w-2 h-2 rounded-full bg-gold-500 animate-pulse"></span>
+                            Spreading Happiness
+                        </div>
+                        <h1 class="serif-font text-5xl md:text-7xl lg:text-8xl font-bold leading-[1.1] tracking-tight text-brand-900 animate-fade-in-up" style="animation-delay: 100ms;">
+                            Wrap Your <br />
+                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-gold-500">Love & Joy.</span>
+                        </h1>
+                        <p class="text-base md:text-xl text-brand-800/70 max-w-lg mx-auto lg:mx-0 leading-relaxed animate-fade-in-up font-sans" style="animation-delay: 200ms;">
+                            Curated luxury gifts for every occasion. From birthdays to weddings, make every moment unforgettable.
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-4 pt-4 animate-fade-in-up justify-center lg:justify-start" style="animation-delay: 300ms;">
+                            <button onclick="scrollToDeals()" class="px-8 py-4 bg-brand-600 text-white rounded-full font-bold text-lg hover:bg-brand-700 shadow-xl shadow-brand-600/30 w-full sm:w-auto">
+                                Find a Gift
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 3D Hero Visual -->
+                    <div class="relative hidden lg:block h-[500px] md:h-[600px] w-full perspective-1000 animate-fade-in-up" style="animation-delay: 400ms;">
+                        <div id="hero-card-container" class="relative w-full h-full preserve-3d transition-transform duration-100 ease-out flex items-center justify-center">
+                            <div class="absolute top-20 right-20 animate-float"><div class="w-16 h-16 bg-white rounded-full shadow-lg flex items-center justify-center text-3xl">🎈</div></div>
+                            <div class="absolute bottom-40 left-10 animate-float-delayed"><div class="w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center text-2xl">✨</div></div>
+                            <div class="absolute w-72 md:w-80 h-[28rem] bg-white rounded-t-full rounded-b-3xl shadow-2xl border-4 border-white p-2 z-20 preserve-3d">
+                                <div class="w-full h-full bg-gradient-to-br from-rose-50 to-white rounded-t-full rounded-b-2xl overflow-hidden relative flex flex-col items-center justify-center pt-10">
+                                    <div class="w-48 h-48 bg-brand-100 rounded-full flex items-center justify-center mb-6 relative group">
+                                        <img src="https://api.dicebear.com/7.x/shapes/svg?seed=Gift" alt="Gift" class="w-32 h-32 drop-shadow-xl relative z-10">
+                                    </div>
+                                    <h3 class="font-serif text-2xl font-bold text-brand-900">Luxury Hamper</h3>
+                                    <p class="text-brand-500 text-sm mt-1">Limited Edition</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Products Grid -->
+            <section id="deals" class="py-16 md:py-24 relative">
+                <div class="container mx-auto px-6">
+                    <div class="flex items-end justify-between mb-12">
+                        <h2 class="text-3xl md:text-5xl font-serif font-bold text-brand-900">Trending Gifts</h2>
+                    </div>
+                    <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"></div>
+                </div>
+            </section>
+        </div>
+        
+        <!-- Other views (Seller/Admin) hidden by default -->
+        <div id="view-seller" class="view-section hidden container mx-auto px-6 py-12"><h1 class="text-2xl font-bold">Seller Dashboard</h1></div>
+        <div id="view-admin" class="view-section hidden container mx-auto px-6 py-12"><h1 class="text-2xl font-bold">Admin Dashboard</h1></div>
+    </main>
+
+    <!-- IMPROVED DYNAMIC FOOTER -->
+    <footer class="bg-dark-950 text-white pt-24 pb-10 relative overflow-hidden mt-12">
+        <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-brand-600 via-gold-500 to-brand-600"></div>
+        
+        <!-- Wave Animation -->
+        <div class="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
+
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+                <!-- Brand -->
+                <div class="col-span-1 md:col-span-1">
+                    <div class="flex items-center gap-2 mb-6">
+                        <div class="w-10 h-10 bg-brand-600 rounded-lg flex items-center justify-center text-white font-serif font-bold text-xl">G</div>
+                        <span class="font-serif font-bold text-2xl tracking-tight text-white">GIFTORA</span>
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-6">
+                        Crafting memories, one gift at a time. The premium destination for personalized and luxury gifting.
+                    </p>
+                    <div class="flex gap-4">
+                        <a href="#" class="p-2 bg-white/10 rounded-full hover:bg-brand-600 transition-colors"><i data-lucide="instagram" width="18"></i></a>
+                        <a href="#" class="p-2 bg-white/10 rounded-full hover:bg-brand-600 transition-colors"><i data-lucide="twitter" width="18"></i></a>
+                        <a href="#" class="p-2 bg-white/10 rounded-full hover:bg-brand-600 transition-colors"><i data-lucide="linkedin" width="18"></i></a>
+                    </div>
+                </div>
+
+                <!-- Links -->
+                <div>
+                    <h4 class="font-bold text-white mb-6 uppercase tracking-wider text-sm">Shop</h4>
+                    <ul class="space-y-3 text-gray-400 text-sm">
+                        <li><a href="#" class="hover:text-gold-500 transition-colors flex items-center gap-2"><i data-lucide="chevron-right" width="12"></i> New Arrivals</a></li>
+                        <li><a href="#" class="hover:text-gold-500 transition-colors flex items-center gap-2"><i data-lucide="chevron-right" width="12"></i> Best Sellers</a></li>
+                        <li><a href="#" class="hover:text-gold-500 transition-colors flex items-center gap-2"><i data-lucide="chevron-right" width="12"></i> Personalized</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-bold text-white mb-6 uppercase tracking-wider text-sm">Support</h4>
+                    <ul class="space-y-3 text-gray-400 text-sm">
+                        <li><a href="#" class="hover:text-gold-500 transition-colors flex items-center gap-2"><i data-lucide="chevron-right" width="12"></i> Track Order</a></li>
+                        <li><a href="#" class="hover:text-gold-500 transition-colors flex items-center gap-2"><i data-lucide="chevron-right" width="12"></i> Shipping Info</a></li>
+                        <li><a href="#" class="hover:text-gold-500 transition-colors flex items-center gap-2"><i data-lucide="chevron-right" width="12"></i> Returns</a></li>
+                    </ul>
+                </div>
+
+                <!-- Newsletter -->
+                <div>
+                    <h4 class="font-bold text-white mb-6 uppercase tracking-wider text-sm">Stay Updated</h4>
+                    <p class="text-gray-400 text-sm mb-4">Subscribe for exclusive offers and new launches.</p>
+                    <div class="flex">
+                        <input type="email" placeholder="Your email" class="bg-white/10 border-none outline-none text-white px-4 py-2 rounded-l-lg w-full text-sm placeholder-gray-500 focus:ring-1 focus:ring-brand-500">
+                        <button class="bg-brand-600 hover:bg-brand-700 px-4 py-2 rounded-r-lg transition-colors"><i data-lucide="send" width="16"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
+                <p>© 2025 Giftora. All rights reserved.</p>
+                <div class="flex items-center gap-2">
+                    <span>Designed with ❤️ by</span>
+                    <a href="https://pixcelyash.space" class="text-white hover:text-gold-500 font-bold transition-colors">Pixcelyash.space</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ========================================= -->
+    <!-- JAVASCRIPT LOGIC -->
+    <!-- ========================================= -->
+    <script>
+        // --- DATA CONFIGURATION ---
+        const products = [
+            // NEW PRODUCT ADDED AT START
+            { 
+                id: 12, 
+                name: "Gorgeous Decor Set", 
+                price: "₹599", 
+                rating: 4.9, 
+                image: "https://i.postimg.cc/RZc52gyT/file-0000000038e472069699bef5ddb25b99.png", 
+                tag: "Premium Choice", 
+                color: "bg-violet-50", 
+                keywords: ["decor", "set", "gorgeous", "gift", "599", "home", "aesthetic"],
+                description: "Elevate your living space with this gorgeous decor set. A perfect blend of modern aesthetics and timeless elegance, designed to add a touch of sophistication to any room."
+            },
+            { 
+                id: 11, 
+                name: "Candles (Set of 2)", 
+                price: "₹250", 
+                rating: 4.7, 
+                image: "https://i.postimg.cc/kXgv0GH1/file-000000009b34720695f635489af589fd.png", 
+                tag: "Pocket Friendly", 
+                color: "bg-yellow-50", 
+                keywords: ["candle", "light", "wax", "decor", "250", "gift", "set"],
+                description: "Create a serene atmosphere with this duo of hand-poured candles. Perfect for intimate dinners or relaxing evenings, these candles offer a gentle, long-lasting glow to brighten up any corner."
+            },
+            { 
+                id: 10, 
+                name: "Mini Candles (Set of 3)", 
+                price: "₹350", 
+                rating: 4.8, 
+                image: "https://i.postimg.cc/nhHfb4x9/file-00000000dcb872099482bbaae92c1457.png", 
+                tag: "Best Value", 
+                color: "bg-red-50", 
+                keywords: ["candle", "mini", "set", "wax", "light", "decor", "350", "gift"],
+                description: "A delightful set of three handcrafted mini candles. Perfect for adding a warm, cozy glow to any small space or as a thoughtful token of appreciation."
+            },
+            { 
+                id: 8, 
+                name: "Custom 3D Photo Illusion Lamp", 
+                price: "₹599", 
+                rating: 4.9, 
+                image: "lightbulb", 
+                tag: "New Arrival", 
+                color: "bg-orange-50", 
+                keywords: ["lamp", "light", "3d", "photo", "custom", "599", "gift"],
+                description: "Turn your favorite memory into a glowing masterpiece. This custom 3D illusion lamp features your photo laser-etched on high-quality acrylic, creating a stunning holographic visual effect when lit. A magical gift for any occasion."
+            },
+            { 
+                id: 7, 
+                name: "Custom Spotify Plaque", 
+                price: "₹599", 
+                rating: 4.9, 
+                image: "music", 
+                tag: "Best Seller", 
+                color: "bg-green-50", 
+                keywords: ["music", "spotify", "frame", "custom", "song", "599"],
+                description: "Celebrate your special song with a custom acrylic plaque. Features your favorite track, artist, and a scannable Spotify code for instant playback."
+            },
+            { 
+                id: 0, 
+                name: "Personalized Star Map Frame", 
+                price: "₹599", 
+                rating: 4.8, 
+                image: "star", 
+                tag: "Trending", 
+                color: "bg-indigo-50", 
+                keywords: ["frame", "star", "map", "personalized", "gift", "599"],
+                description: "Capture the alignment of the stars on your special night. A perfect romantic gift customized with date and location."
+            },
+            { id: 1, name: "Luxury Perfume Set", price: "₹4,999", rating: 4.9, image: "heart", tag: "Bestseller", color: "bg-rose-50", keywords: ["smell", "scent", "fragrance", "her", "wife"], description: "An exquisite collection of premium fragrances for her." },
+            { id: 2, name: "Custom Photo Lamp", price: "₹1,499", rating: 4.8, image: "image", tag: "Personalized", color: "bg-amber-50", keywords: ["light", "photo", "memory", "custom", "friend"], description: "Illuminate your memories with this 3D printed photo lamp." },
+            { id: 3, name: "Premium Watch Box", price: "₹8,990", rating: 4.9, image: "watch", tag: "Luxury", color: "bg-slate-50", keywords: ["time", "men", "husband", "accessory"], description: "Elegant storage for his timepiece collection." },
+            { id: 4, name: "Gourmet Chocolate Hamper", price: "₹2,499", rating: 4.7, image: "cookie", tag: "Sweet Treat", color: "bg-rose-50", keywords: ["food", "sweet", "eat", "snack"], description: "Handcrafted chocolates sourced from the finest cocoa." },
+            { id: 5, name: "Couple Mug Set", price: "₹999", rating: 4.5, image: "coffee", tag: "Wedding", color: "bg-blue-50", keywords: ["drink", "wedding", "couple", "tea"], description: "Matching ceramic mugs for the perfect couple." }, 
+            { id: 6, name: "Giant Teddy Bear", price: "₹3,999", rating: 4.8, image: "smile", tag: "Kids", color: "bg-purple-50", keywords: ["toy", "soft", "kid", "child"], description: "Soft, cuddly, and adorable giant teddy bear." },
+        ];
+
+        let cartCount = 0;
+
+        // --- PRODUCT DETAIL LOGIC ---
+        function openProductDetail(product) {
+            // Hide other sections
+            document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
+            
+            // Populate Detail View
+            document.getElementById('detail-title').innerText = product.name;
+            document.getElementById('detail-price').innerText = product.price;
+            document.getElementById('detail-tag').innerText = product.tag;
+            document.getElementById('detail-desc').innerText = product.description || "A wonderful gift for your loved ones.";
+            
+            // Icon/Image handling
+            const iconContainer = document.getElementById('detail-icon');
+            const imageContainer = iconContainer.parentElement;
+            
+            // Clear previous content
+            imageContainer.innerHTML = '';
+
+            if (product.image.startsWith('http')) {
+                // It's a real image URL
+                const img = document.createElement('img');
+                img.src = product.image;
+                img.className = "w-full h-full object-cover";
+                img.alt = product.name;
+                imageContainer.appendChild(img);
+            } else {
+                // It's a lucide icon
+                const icon = document.createElement('i');
+                icon.setAttribute('data-lucide', product.image);
+                icon.className = "w-32 h-32 text-brand-500";
+                icon.id = "detail-icon";
+                imageContainer.appendChild(icon);
+                lucide.createIcons();
+            }
+            
+            // Show Detail View
+            document.getElementById('view-product-detail').classList.remove('hidden');
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // --- PRELOADER SEQUENCE ENGINE ---
+        document.addEventListener("DOMContentLoaded", () => {
+            const preloader = document.getElementById('preloader');
+            const loaderBar = document.getElementById('loader-bar');
+            const giftBox = document.getElementById('gift-box-el');
+            const flashOverlay = document.querySelector('.flash-overlay');
+            const giftStage = document.getElementById('gift-stage');
+            const creditsStage = document.getElementById('credits-stage');
+            const curtainLeft = document.getElementById('curtain-left');
+            const curtainRight = document.getElementById('curtain-right');
+            const warpContainer = document.getElementById('warp-container');
+            
+            const line1 = document.getElementById('credit-line-1');
+            const line2 = document.getElementById('credit-line-2');
+            const line3 = document.getElementById('credit-line-3');
+
+            // Create Warp Stars
+            for(let i=0; i<30; i++) {
+                const star = document.createElement('div');
+                star.className = 'warp-star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 0.5 + 's';
+                star.style.transform = `rotate(${Math.random() * 360}deg)`;
+                warpContainer.appendChild(star);
+            }
+
+            // 1. Start Loader Bar
+            setTimeout(() => { loaderBar.style.width = '100%'; }, 100);
+
+            // 2. Zoom In + Warp Effect (2000ms)
+            setTimeout(() => {
+                 giftBox.style.animation = 'none'; 
+                 giftStage.classList.add('zooming');
+                 preloader.classList.add('warp-active'); // Triggers star animation
+            }, 2000);
+
+            // 3. FLASH! (2500ms)
+            setTimeout(() => {
+                flashOverlay.classList.add('active');
+                
+                setTimeout(() => {
+                    giftStage.classList.add('hidden');
+                    preloader.classList.add('credits-mode');
+                    preloader.classList.remove('warp-active');
+                    creditsStage.classList.add('visible');
+                    
+                    curtainLeft.style.transform = "translateX(0)";
+                    curtainRight.style.transform = "translateX(0)";
+                    curtainLeft.style.transition = "none"; 
+                    curtainRight.style.transition = "none";
+                }, 50);
+
+                setTimeout(() => { flashOverlay.classList.remove('active'); }, 150);
+            }, 2500);
+
+            // 4. Credits
+            setTimeout(() => {
+                curtainLeft.style.transition = "transform 1.5s cubic-bezier(0.87, 0, 0.13, 1)";
+                curtainRight.style.transition = "transform 1.5s cubic-bezier(0.87, 0, 0.13, 1)";
+                line1.classList.add('in');
+            }, 2700);
+
+            setTimeout(() => { line2.classList.add('in'); }, 3300);
+            setTimeout(() => { line3.classList.add('in'); }, 4300);
+
+            // 5. Reveal (6000ms)
+            setTimeout(() => {
+                preloader.classList.add('reveal-mode');
+                initApp();
+            }, 6000);
+
+            // 6. Remove (7500ms)
+            setTimeout(() => { preloader.classList.add('gone'); }, 7500);
+        });
+
+        function initApp() {
+            renderProducts(products);
+            lucide.createIcons();
+            setupSearch();
+        }
+
+        // --- AI SEARCH FUNCTIONALITY ---
+        function setupSearch() {
+            const inputs = [document.getElementById('search-input'), document.getElementById('mobile-search-input')];
+            const resultContainers = [document.getElementById('search-results'), document.getElementById('mobile-search-results')];
+
+            inputs.forEach((input, index) => {
+                if(!input) return;
+                const resultsBox = resultContainers[index];
+
+                input.addEventListener('input', (e) => {
+                    const query = e.target.value.toLowerCase();
+                    
+                    if (query.length === 0) {
+                        resultsBox.classList.remove('active');
+                        resultsBox.innerHTML = '';
+                        return;
+                    }
+
+                    resultsBox.classList.add('active');
+                    
+                    // Simulate AI Thinking
+                    resultsBox.innerHTML = `
+                        <div class="p-4 flex items-center gap-3 text-brand-600">
+                            <span class="ai-pulse"></span>
+                            <span class="text-sm font-bold animate-pulse">AI is analyzing your request...</span>
+                        </div>
+                    `;
+
+                    // Simulate API Delay
+                    setTimeout(() => {
+                        const matches = products.filter(p => 
+                            p.name.toLowerCase().includes(query) || 
+                            p.keywords.some(k => k.includes(query)) ||
+                            p.tag.toLowerCase().includes(query)
+                        );
+
+                        if (matches.length > 0) {
+                            resultsBox.innerHTML = `
+                                <div class="px-4 py-2 border-b border-gray-100 flex justify-between items-center">
+                                    <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">AI Recommendations</span>
+                                    <span class="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-bold">98% Match</span>
+                                </div>
+                                ${matches.map(p => `
+                                    <div class="search-item flex items-center gap-4 p-3 hover:bg-gray-50 cursor-pointer transition-colors" data-id="${p.id}">
+                                        <div class="w-10 h-10 rounded-lg ${p.color} flex items-center justify-center text-brand-600 overflow-hidden">
+                                            ${p.image.startsWith('http') 
+                                                ? `<img src="${p.image}" class="w-full h-full object-cover">` 
+                                                : `<i data-lucide="${p.image}" width="16"></i>`
+                                            }
+                                        </div>
+                                        <div>
+                                            <div class="font-bold text-sm text-gray-900">${p.name}</div>
+                                            <div class="text-xs text-gray-500">${p.price} • ${p.tag}</div>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            `;
+                            
+                            // Add click listeners to search results
+                            resultsBox.querySelectorAll('.search-item').forEach(item => {
+                                item.addEventListener('click', () => {
+                                    const productId = item.getAttribute('data-id');
+                                    const product = products.find(p => p.id == productId);
+                                    if(product) {
+                                        openProductDetail(product);
+                                        // Clear search
+                                        resultsBox.classList.remove('active');
+                                        input.value = '';
+                                    }
+                                });
+                            });
+
+                        } else {
+                            resultsBox.innerHTML = `
+                                <div class="p-4 text-center">
+                                    <p class="text-sm text-gray-500 mb-2">Hmm, I couldn't find that exact match.</p>
+                                    <p class="text-xs text-brand-500 font-bold">Try "watch", "perfume", or "wedding"</p>
+                                </div>
+                            `;
+                        }
+                        lucide.createIcons();
+                    }, 800); // 800ms "thinking" delay
+                });
+            });
+        }
+
+        // --- RENDER PRODUCTS ---
+        function renderProducts(list) {
+            const grid = document.getElementById('product-grid');
+            if(!grid) return;
+            grid.innerHTML = list.map((p, index) => `
+                <div class="bg-white rounded-2xl p-4 shadow-sm hover:shadow-2xl hover:shadow-brand-200/50 border border-brand-50 transition-all duration-500 transform hover:-translate-y-2 group cursor-pointer" onclick="openProductDetail(products[${index}])">
+                    <div class="absolute top-4 left-4 z-20">
+                        <span class="bg-white/90 backdrop-blur-md text-brand-600 text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider shadow-sm border border-brand-100">
+                            ${p.tag}
+                        </span>
+                    </div>
+                    <div class="h-64 w-full mb-4 relative overflow-hidden rounded-xl ${p.color} flex items-center justify-center group-hover:bg-white transition-colors duration-500 border border-transparent group-hover:border-brand-100">
+                         <div class="transform group-hover:scale-110 group-hover:rotate-6 transition-transform duration-700 ease-out z-10 w-full h-full flex items-center justify-center">
+                             ${p.image.startsWith('http') 
+                                ? `<img src="${p.image}" class="w-full h-full object-cover" alt="${p.name}">` 
+                                : `<i data-lucide="${p.image}" class="w-20 h-20 text-brand-800/80 group-hover:text-brand-600 transition-colors"></i>`
+                             }
+                         </div>
+                         <div class="absolute bottom-4 right-4 flex gap-2 opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 z-20">
+                             <button class="p-3 bg-white text-brand-900 rounded-full shadow-lg hover:bg-brand-50 hover:scale-110 transition-transform" onclick="event.stopPropagation()"><i data-lucide="shopping-bag" width="18"></i></button>
+                         </div>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg text-brand-900 font-serif">${p.name}</h3>
+                        <p class="text-xl font-extrabold text-brand-900 mt-2">${p.price}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function switchTab(role) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
+            const target = document.getElementById(`view-${role}`);
+            if(target) target.classList.remove('hidden');
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            if (menu.classList.contains('closed')) {
+                menu.classList.remove('closed');
+                menu.classList.add('open');
+            } else {
+                menu.classList.remove('open');
+                menu.classList.add('closed');
+            }
+        }
+
+        function scrollToDeals() {
+            const deals = document.getElementById('deals');
+            if(deals) deals.scrollIntoView({behavior: 'smooth', block: 'start'});
+        }
+    </script>
+</body>
+</html>
