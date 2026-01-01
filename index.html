@@ -46,37 +46,12 @@
                         'float': 'float 6s ease-in-out infinite',
                         'float-delayed': 'float 6s ease-in-out 3s infinite',
                         'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'shimmer': 'shimmer 2.5s linear infinite',
                         'confetti': 'confettiDrop 4s linear infinite',
-                        'shake': 'shake 0.5s cubic-bezier(.36,.07,.19,.97) both infinite',
-                        'twinkle': 'twinkle 2s ease-in-out infinite',
-                        'warp': 'warp 0.2s linear infinite',
-                        'spin-slow': 'spin 10s linear infinite',
-                        'spin-reverse': 'spin 15s linear infinite reverse',
                     },
                     keyframes: {
-                        shimmer: {
-                            '0%': { backgroundPosition: '-1000px 0' },
-                            '100%': { backgroundPosition: '1000px 0' }
-                        },
                         confettiDrop: {
                             '0%': { transform: 'translateY(-100vh) rotate(0deg)' },
                             '100%': { transform: 'translateY(100vh) rotate(360deg)' }
-                        },
-                        shake: {
-                            '10%, 90%': { transform: 'translate3d(-1px, 0, 0) rotate(1deg)' },
-                            '20%, 80%': { transform: 'translate3d(2px, 0, 0) rotate(-1deg)' },
-                            '30%, 50%, 70%': { transform: 'translate3d(-4px, 0, 0) rotate(2deg)' },
-                            '40%, 60%': { transform: 'translate3d(4px, 0, 0) rotate(-2deg)' }
-                        },
-                        twinkle: {
-                            '0%, 100%': { opacity: 0.2, transform: 'scale(0.8)' },
-                            '50%': { opacity: 1, transform: 'scale(1.2)' }
-                        },
-                        warp: {
-                            '0%': { transform: 'translateZ(0) translateY(0)', opacity: 0 },
-                            '50%': { opacity: 1 },
-                            '100%': { transform: 'translateZ(200px) translateY(100px)', opacity: 0 }
                         }
                     }
                 }
@@ -85,17 +60,7 @@
     </script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&display=swap');
-
-        :root {
-            --box-size: 100px;
-        }
-        @media (min-width: 768px) {
-            :root {
-                --box-size: 140px;
-            }
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Cinzel:wght@400;700;900&display=swap');
 
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
@@ -104,221 +69,180 @@
             overflow-x: hidden;
         }
 
-        h1, h2, h3, .serif-font {
-            font-family: 'Playfair Display', serif;
-        }
+        h1, h2, h3, .serif-font { font-family: 'Playfair Display', serif; }
+        .cinematic-font { font-family: 'Cinzel', serif; }
 
-        .cinematic-font {
-            font-family: 'Cinzel', serif;
-        }
-
-        /* --- CINEMATIC PRELOADER --- */
+        /* ========================================= */
+        /* STORYTELLING PRELOADER STYLES             */
+        /* ========================================= */
         #preloader {
             position: fixed;
             inset: 0;
             z-index: 9999;
+            background: #000;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: radial-gradient(circle at center, #9f1239 0%, #020617 80%);
             overflow: hidden;
-            perspective: 1000px;
+            perspective: 1500px;
         }
-        
-        #preloader::after {
-            content: '';
+
+        /* --- Narrative Text --- */
+        #story-text {
             position: absolute;
-            inset: 0;
-            background: radial-gradient(transparent 50%, black 100%);
+            width: 100%;
+            text-align: center;
+            color: #fff;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.5rem;
+            z-index: 100;
             pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+        }
+        @media (min-width: 768px) { #story-text { font-size: 2.5rem; } }
+
+        /* --- 1. The Spark (Wish) --- */
+        #wish-spark {
+            position: absolute;
+            width: 4px; height: 4px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 20px 5px rgba(255,255,255,0.8);
+            top: -10%; left: -10%; /* Start off screen */
+            opacity: 0;
+        }
+        .anim-travel-spark { animation: sparkTravel 2s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
+
+        @keyframes sparkTravel {
+            0% { top: -10%; left: -10%; opacity: 1; }
+            50% { opacity: 1; box-shadow: 0 0 40px 10px rgba(251, 191, 36, 0.8); }
+            100% { top: 50%; left: 50%; opacity: 0; transform: scale(5); } /* Ends by exploding into core */
+        }
+
+        /* --- 2. The Soul Core (Energy Sphere) --- */
+        #soul-core {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 80px; height: 80px;
+            margin-top: -40px; margin-left: -40px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #fff 0%, #fbbf24 40%, #b45309 100%);
+            box-shadow: 0 0 60px 20px rgba(251, 191, 36, 0.4);
+            transform: scale(0);
             z-index: 10;
         }
-
-        /* Outer Orbit Animation - Improved */
-        .orbit-ring {
-            position: absolute;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 15;
-            box-shadow: 0 0 15px rgba(251, 191, 36, 0.2);
-        }
-        .orbit-1 { 
-            width: 320px; 
-            height: 320px; 
-            border: 1px solid rgba(251, 191, 36, 0.4);
-            border-top: 2px solid #fbbf24;
-            animation: spin-slow 8s linear infinite; 
-        }
-        .orbit-2 { 
-            width: 480px; 
-            height: 480px; 
-            border: 1px solid rgba(244, 63, 94, 0.3);
-            border-bottom: 2px solid #f43f5e;
-            animation: spin-reverse 12s linear infinite; 
-        }
-        .orbit-3 {
-            width: 600px;
-            height: 600px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-left: 2px solid rgba(255, 255, 255, 0.5);
-            animation: spin-slow 20s linear infinite;
-        }
-
-        /* Warp Speed Stars */
-        .warp-star {
-            position: absolute;
-            width: 2px;
-            height: 50px;
-            background: linear-gradient(to bottom, transparent, #fff, transparent);
-            opacity: 0;
-            transform-origin: center;
-            z-index: 5;
-        }
-        .warp-active .warp-star {
-            animation: warp 0.5s linear infinite;
-        }
-
-        .flash-overlay {
-            position: absolute;
-            inset: 0;
-            background: white;
-            opacity: 0;
-            pointer-events: none;
-            z-index: 200;
-            transition: opacity 0.1s ease-out;
-        }
-        .flash-overlay.active { opacity: 1; }
-
-        .curtain-panel {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            width: 50%;
-            background: #020617;
-            z-index: 100;
-            transition: transform 1.5s cubic-bezier(0.87, 0, 0.13, 1);
-        }
-        .curtain-left { left: 0; transform: translateX(-100%); border-right: 1px solid #1e293b; } 
-        .curtain-right { right: 0; transform: translateX(100%); border-left: 1px solid #1e293b; } 
-
-        #preloader.credits-mode { background: #000000; }
-        #preloader.reveal-mode .curtain-left { transform: translateX(-100%) !important; }
-        #preloader.reveal-mode .curtain-right { transform: translateX(100%) !important; }
-        #preloader.gone { display: none; }
-
-        /* 3D Gift Styles */
-        #gift-stage {
-            perspective: 1000px;
-            opacity: 1;
-            transition: opacity 0.3s, transform 0.5s cubic-bezier(0.7, 0, 0.84, 0);
-            transform-style: preserve-3d;
-            z-index: 20;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-        #gift-stage.zooming { transform: scale(8) translateZ(500px); opacity: 0; }
-        #gift-stage.hidden { opacity: 0; pointer-events: none; display: none; }
-
-        .gift-container {
-            width: var(--box-size);
-            height: var(--box-size);
-            transform-style: preserve-3d;
-            margin-bottom: 3rem;
-        }
+        .anim-expand-core { animation: expandCore 4s ease-in-out infinite; }
         
-        .gift-box {
-            width: 100%;
-            height: 100%;
+        @keyframes expandCore {
+            0% { transform: scale(0); opacity: 0; }
+            10% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(0.9); box-shadow: 0 0 30px 10px rgba(251, 191, 36, 0.6); }
+            100% { transform: scale(1); box-shadow: 0 0 60px 20px rgba(251, 191, 36, 0.4); }
+        }
+
+        /* --- 3D Scene --- */
+        .scene-container {
+            width: 200px; height: 200px;
             position: relative;
             transform-style: preserve-3d;
-            animation: spin-gift 4s infinite linear;
+            transform: rotateX(-15deg) rotateY(45deg); 
+        }
+
+        .gift-cube {
+            width: var(--size); height: var(--size);
+            position: absolute;
+            top: 50%; left: 50%;
+            margin-left: calc(var(--size) / -2); 
+            margin-top: calc(var(--size) / -2);
+            transform-style: preserve-3d;
+        }
+
+        /* --- Construction Faces (The Vessel) --- */
+        .face {
+            position: absolute;
+            width: 100%; height: 100%;
+            background: rgba(190, 18, 60, 0.95); /* Semi-transparent initially */
+            border: 1px solid #fbbf24;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0;
+            box-shadow: 0 0 30px rgba(190, 18, 60, 0.3);
+            transition: transform 1s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease;
         }
         
-        .gift-face {
+        /* Ribbon Placeholder */
+        .face::after {
+            content: ''; position: absolute;
+            background: #fbbf24;
+            opacity: 0; /* Hidden until "Sealed" */
+            transition: opacity 1s ease;
+        }
+        .face.front::after, .face.back::after, .face.top::after, .face.bottom::after { width: 20%; height: 100%; left: 40%; }
+        .face.left::after, .face.right::after { width: 100%; height: 20%; top: 40%; }
+        
+        /* Initial Exploded State (Far away) */
+        .face.front  { transform: translateZ(400px); }
+        .face.back   { transform: translateZ(-400px); }
+        .face.right  { transform: translateX(400px) rotateY(90deg); }
+        .face.left   { transform: translateX(-400px) rotateY(-90deg); }
+        .face.top    { transform: translateY(-400px) rotateX(90deg); }
+        .face.bottom { transform: translateY(400px) rotateX(-90deg); }
+
+        /* Assembled State (Trapping the Core) */
+        .gift-cube.assembled .face { opacity: 1; }
+        .gift-cube.assembled .face.front  { transform: translateZ(calc(var(--size) / 2)); }
+        .gift-cube.assembled .face.back   { transform: rotateY(180deg) translateZ(calc(var(--size) / 2)); }
+        .gift-cube.assembled .face.right  { transform: rotateY(90deg) translateZ(calc(var(--size) / 2)); }
+        .gift-cube.assembled .face.left   { transform: rotateY(-90deg) translateZ(calc(var(--size) / 2)); }
+        .gift-cube.assembled .face.top    { transform: rotateX(90deg) translateZ(calc(var(--size) / 2)); }
+        .gift-cube.assembled .face.bottom { transform: rotateX(-90deg) translateZ(calc(var(--size) / 2)); }
+
+        /* Sealed State (Ribbon Appears) */
+        .gift-cube.sealed .face::after { opacity: 1; }
+        .gift-cube.sealed .face { background: linear-gradient(135deg, #9f1239 0%, #4c0519 100%); } /* Solidify */
+        .gift-cube.sealed #soul-core { opacity: 0; transition: opacity 0.5s; } /* Hide core inside */
+
+        /* Open State */
+        .anim-open-lid { transform: rotateX(120deg) !important; transition: transform 1.5s ease; }
+
+        /* --- Branding --- */
+        #brand-reveal {
             position: absolute;
-            width: var(--box-size);
-            height: var(--box-size);
-            background: radial-gradient(circle, #fbbf24 30%, #b45309 100%);
-            border: 1px solid #92400e;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: inset 0 0 30px rgba(0,0,0,0.6); 
-        }
-
-        .gift-face::before, .gift-face::after {
-            content: '';
-            position: absolute;
-            background: linear-gradient(to bottom, #f43f5e, #be123c);
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
-        }
-        .gift-face::before { width: 25%; height: 100%; }
-        .gift-face::after { width: 100%; height: 25%; }
-
-        .front  { transform: rotateY(0deg) translateZ(calc(var(--box-size) / 2)); }
-        .back   { transform: rotateY(180deg) translateZ(calc(var(--box-size) / 2)); }
-        .right  { transform: rotateY(90deg) translateZ(calc(var(--box-size) / 2)); }
-        .left   { transform: rotateY(-90deg) translateZ(calc(var(--box-size) / 2)); }
-        .top    { transform: rotateX(90deg) translateZ(calc(var(--box-size) / 2)); background: #fcd34d; }
-        .bottom { transform: rotateX(-90deg) translateZ(calc(var(--box-size) / 2)); }
-
-        @keyframes spin-gift {
-            0% { transform: rotateX(-15deg) rotateY(0deg); }
-            100% { transform: rotateX(-15deg) rotateY(360deg); }
-        }
-
-        .sparkle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: white;
-            border-radius: 50%;
-            box-shadow: 0 0 15px 2px #fbbf24;
-            animation: twinkle 2s infinite ease-in-out;
-        }
-
-        #credits-stage {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            z-index: 150;
-            pointer-events: none;
-            padding: 20px;
-        }
-        #credits-stage.visible { opacity: 1; }
-
-        .cinematic-text {
-            text-align: center;
-            color: white;
-            opacity: 0;
-            transform: scale(1.1);
-            filter: blur(10px);
-            transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+            bottom: 20%;
             width: 100%;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 1s ease;
         }
-        .cinematic-text.in { opacity: 1; transform: scale(1); filter: blur(0px); }
-
-        .gold-gradient-text {
-            background: linear-gradient(to bottom, #fbbf24, #d97706, #fbbf24);
+        .brand-main {
+            font-family: 'Cinzel', serif;
+            font-size: 2rem;
+            background: linear-gradient(to right, #fbbf24, #fff, #fbbf24);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            text-shadow: 0 0 30px rgba(251, 191, 36, 0.3);
+            letter-spacing: 0.3em;
+            font-weight: 700;
+        }
+        .brand-sub {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            letter-spacing: 0.5em;
+            margin-top: 5px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            text-transform: uppercase;
         }
 
-        /* --- SEARCH BOX STYLES --- */
-        #search-container {
-            position: relative;
-            z-index: 50;
+        /* Flash */
+        #flash {
+            position: fixed; inset: 0; background: white; opacity: 0; pointer-events: none; z-index: 200;
         }
-        #search-results {
+        #flash.active { animation: flashAnim 1.5s ease-out forwards; }
+        @keyframes flashAnim { 0% { opacity: 1; } 100% { opacity: 0; } }
+
+        /* --- SEARCH FUNCTIONALITY STYLES --- */
+        #search-results, #mobile-search-results {
             position: absolute;
             top: 100%;
             left: 0;
@@ -335,12 +259,16 @@
             transform: translateY(-10px);
             pointer-events: none;
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 60;
         }
-        #search-results.active {
+        
+        #search-results.active, #mobile-search-results.active {
             opacity: 1;
             transform: translateY(0);
             pointer-events: auto;
+            display: block; 
         }
+
         .ai-pulse {
             width: 8px;
             height: 8px;
@@ -350,97 +278,49 @@
             animation: pulse-slow 1s infinite;
         }
 
-        /* General UI Helpers */
-        @keyframes float { 0%, 100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-20px) rotate(5deg); } }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(40px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
-        .reveal { opacity: 0; transform: translateY(40px); transition: all 1s cubic-bezier(0.16, 1, 0.3, 1); }
-        .reveal.active { opacity: 1; transform: translateY(0); }
-        .hide-scrollbar::-webkit-scrollbar { display: none; }
-        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .perspective-1000 { perspective: 1000px; }
-        .preserve-3d { transform-style: preserve-3d; }
-        #mobile-menu { transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
-        #mobile-menu.open { transform: translateX(0); }
-        #mobile-menu.closed { transform: translateX(100%); }
-        .glass-panel { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.5); }
-        .confetti-piece { position: absolute; width: 10px; height: 10px; background: #ffd700; top: -10px; z-index: 1; }
+        :root { --size: 120px; }
+        @media (min-width: 768px) { :root { --size: 160px; } }
     </style>
 </head>
 <body class="antialiased selection:bg-brand-500 selection:text-white">
 
     <!-- ========================================= -->
-    <!-- CINEMATIC PRELOADER -->
+    <!-- NARRATIVE PRELOADER -->
     <!-- ========================================= -->
     <div id="preloader">
-        <div class="flash-overlay"></div>
-        
-        <!-- Warp Starfield -->
-        <div id="warp-container" class="absolute inset-0 pointer-events-none"></div>
+        <div id="flash"></div>
 
-        <!-- Curtains -->
-        <div class="curtain-panel curtain-left bg-black" id="curtain-left"></div>
-        <div class="curtain-panel curtain-right bg-black" id="curtain-right"></div>
+        <!-- Narrative Subtitles -->
+        <div id="story-text"></div>
 
-        <!-- STAGE 1: 3D GIFT BOX & SPARKLES -->
-        <div id="gift-stage" class="relative">
-            <!-- Orbital Rings for "Outer Animation" -->
-            <div class="orbit-ring orbit-1 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
-            <div class="orbit-ring orbit-2 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
-            <div class="orbit-ring orbit-3 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
+        <!-- 1. The Spark -->
+        <div id="wish-spark"></div>
 
-            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px] h-[200px] pointer-events-none z-0">
-                <div class="sparkle top-0 left-0"></div>
-                <div class="sparkle top-10 right-0" style="animation-delay: 0.5s"></div>
-                <div class="sparkle bottom-0 left-10" style="animation-delay: 1s"></div>
-                <div class="sparkle bottom-10 right-10" style="animation-delay: 1.5s"></div>
-            </div>
+        <!-- 2. The Core Energy -->
+        <div id="soul-core"></div>
 
-            <!-- Spotlight Glow -->
-            <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(251,191,36,0.3)_0%,_transparent_70%)] pointer-events-none scale-[2]"></div>
-
-            <div class="gift-container z-10 mx-auto">
-                <div class="gift-box" id="gift-box-el">
-                    <div class="gift-face front"></div>
-                    <div class="gift-face back"></div>
-                    <div class="gift-face right"></div>
-                    <div class="gift-face left"></div>
-                    <div class="gift-face top"></div>
-                    <div class="gift-face bottom"></div>
-                </div>
-            </div>
-            
-            <div class="text-center z-10 px-4">
-                <h2 class="text-gold-400 text-lg md:text-xl font-cinematic font-bold tracking-[0.3em] uppercase mb-6 drop-shadow-[0_0_10px_rgba(251,191,36,0.5)]">Preparing Magic...</h2>
-                <div class="w-32 md:w-48 h-1 bg-brand-900/50 rounded-full overflow-hidden mx-auto shadow-[0_0_15px_rgba(251,191,36,0.3)]">
-                    <div id="loader-bar" class="h-full bg-gradient-to-r from-gold-400 via-gold-500 to-gold-400 w-0 transition-all duration-[2000ms] ease-out shadow-[0_0_10px_#fbbf24]"></div>
-                </div>
+        <!-- 3. The Vessel Construction -->
+        <div class="scene-container">
+            <div class="gift-cube" id="cube">
+                <div class="face front"></div>
+                <div class="face back"></div>
+                <div class="face right"></div>
+                <div class="face left"></div>
+                <div class="face bottom"></div>
+                <!-- Top is lid -->
+                <div class="face top" id="lid"></div>
             </div>
         </div>
 
-        <!-- STAGE 2: CREDITS -->
-        <div id="credits-stage">
-            <div id="credit-line-1" class="cinematic-text mb-4 md:mb-6">
-                <p class="text-gray-400 text-[10px] md:text-sm tracking-[0.4em] uppercase font-medium font-sans">A Digital Experience</p>
-            </div>
-            
-            <div id="credit-line-2" class="cinematic-text mb-6 md:mb-8">
-                <h1 class="text-3xl sm:text-5xl md:text-7xl font-cinematic font-black tracking-widest gold-gradient-text uppercase leading-tight">
-                    PIXCELYASH<br/><span class="text-white text-2xl sm:text-4xl md:text-5xl tracking-[0.2em]">.SPACE</span>
-                </h1>
-            </div>
-
-            <div id="credit-line-3" class="cinematic-text mt-4 md:mt-8 relative px-4">
-                <div class="h-px w-12 md:w-24 bg-gradient-to-r from-transparent via-white/40 to-transparent mx-auto mb-4"></div>
-                <p class="text-sm sm:text-lg md:text-xl text-gray-300 font-serif italic tracking-wide">
-                    "Visit my website for more details"
-                </p>
-                <div class="h-px w-12 md:w-24 bg-gradient-to-r from-transparent via-white/40 to-transparent mx-auto mt-4"></div>
-            </div>
+        <!-- 4. Brand Reveal -->
+        <div id="brand-reveal">
+            <div class="brand-main">pixcelyash.space</div>
+            <div class="brand-sub">presents</div>
         </div>
     </div>
 
     <!-- ========================================= -->
-    <!-- NAVBAR -->
+    <!-- NAVBAR (UNCHANGED) -->
     <!-- ========================================= -->
     <nav id="navbar" class="fixed top-0 w-full z-40 transition-all duration-300 py-6 bg-transparent">
         <div class="max-w-7xl mx-auto px-4 md:px-6 flex items-center justify-between">
@@ -500,7 +380,8 @@
                 <i data-lucide="sparkles" class="text-brand-500 mr-3" width="18"></i>
                 <input id="mobile-search-input" type="text" placeholder="Ask AI..." class="bg-transparent border-none outline-none w-full text-sm placeholder-brand-300 text-brand-900">
             </div>
-            <div id="mobile-search-results" class="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-2xl p-2 hidden border border-brand-50"></div>
+            <!-- Updated Mobile Results Container -->
+            <div id="mobile-search-results" class="p-2"></div>
         </div>
     </div>
 
@@ -800,80 +681,84 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // --- PRELOADER SEQUENCE ENGINE ---
+        // --- NEW CINEMATIC PRELOADER SEQUENCE ---
         document.addEventListener("DOMContentLoaded", () => {
             const preloader = document.getElementById('preloader');
-            const loaderBar = document.getElementById('loader-bar');
-            const giftBox = document.getElementById('gift-box-el');
-            const flashOverlay = document.querySelector('.flash-overlay');
-            const giftStage = document.getElementById('gift-stage');
-            const creditsStage = document.getElementById('credits-stage');
-            const curtainLeft = document.getElementById('curtain-left');
-            const curtainRight = document.getElementById('curtain-right');
-            const warpContainer = document.getElementById('warp-container');
+            const storyText = document.getElementById('story-text');
+            const spark = document.getElementById('wish-spark');
+            const core = document.getElementById('soul-core');
+            const cube = document.getElementById('cube');
+            const lid = document.getElementById('lid');
+            const brandReveal = document.getElementById('brand-reveal');
+            const flash = document.getElementById('flash');
+
+            const setText = (text) => {
+                storyText.style.opacity = '0';
+                setTimeout(() => {
+                    storyText.innerText = text;
+                    storyText.style.opacity = '1';
+                }, 800);
+            };
+            const hideText = () => { storyText.style.opacity = '0'; };
+
+            // TIMELINE
             
-            const line1 = document.getElementById('credit-line-1');
-            const line2 = document.getElementById('credit-line-2');
-            const line3 = document.getElementById('credit-line-3');
+            // 0s: "It starts with a wish..."
+            setText("It starts with a thought...");
 
-            // Create Warp Stars
-            for(let i=0; i<30; i++) {
-                const star = document.createElement('div');
-                star.className = 'warp-star';
-                star.style.left = Math.random() * 100 + '%';
-                star.style.top = Math.random() * 100 + '%';
-                star.style.animationDelay = Math.random() * 0.5 + 's';
-                star.style.transform = `rotate(${Math.random() * 360}deg)`;
-                warpContainer.appendChild(star);
-            }
-
-            // 1. Start Loader Bar
-            setTimeout(() => { loaderBar.style.width = '100%'; }, 100);
-
-            // 2. Zoom In + Warp Effect (2000ms)
+            // 2s: Spark travels
             setTimeout(() => {
-                 giftBox.style.animation = 'none'; 
-                 giftStage.classList.add('zooming');
-                 preloader.classList.add('warp-active'); // Triggers star animation
+                hideText();
+                spark.classList.add('anim-travel-spark');
             }, 2000);
 
-            // 3. FLASH! (2500ms)
+            // 3.5s: Core Expansion (The Soul)
             setTimeout(() => {
-                flashOverlay.classList.add('active');
+                setText("...a memory in the making.");
+                core.classList.add('anim-expand-core');
+            }, 3500);
+
+            // 5s: Construct Vessel (Snap faces together)
+            setTimeout(() => {
+                hideText();
+                cube.classList.add('assembled');
+            }, 5000);
+
+            // 6.5s: Seal the Box
+            setTimeout(() => {
+                setText("Sealed with affection.");
+                cube.classList.add('sealed');
+            }, 6500);
+
+            // 8s: Brand Reveal
+            setTimeout(() => {
+                hideText();
+                brandReveal.style.opacity = '1';
+            }, 8000);
+
+            // 9.5s: OPEN & REVEAL
+            setTimeout(() => {
+                brandReveal.style.opacity = '0';
+                lid.classList.add('anim-open-lid');
                 
+                // Trigger Flash after lid starts opening
                 setTimeout(() => {
-                    giftStage.classList.add('hidden');
-                    preloader.classList.add('credits-mode');
-                    preloader.classList.remove('warp-active');
-                    creditsStage.classList.add('visible');
-                    
-                    curtainLeft.style.transform = "translateX(0)";
-                    curtainRight.style.transform = "translateX(0)";
-                    curtainLeft.style.transition = "none"; 
-                    curtainRight.style.transition = "none";
-                }, 50);
+                    flash.classList.add('active');
+                }, 500);
 
-                setTimeout(() => { flashOverlay.classList.remove('active'); }, 150);
-            }, 2500);
+            }, 9500);
 
-            // 4. Credits
+            // 11s: Remove Preloader
             setTimeout(() => {
-                curtainLeft.style.transition = "transform 1.5s cubic-bezier(0.87, 0, 0.13, 1)";
-                curtainRight.style.transition = "transform 1.5s cubic-bezier(0.87, 0, 0.13, 1)";
-                line1.classList.add('in');
-            }, 2700);
-
-            setTimeout(() => { line2.classList.add('in'); }, 3300);
-            setTimeout(() => { line3.classList.add('in'); }, 4300);
-
-            // 5. Reveal (6000ms)
-            setTimeout(() => {
-                preloader.classList.add('reveal-mode');
+                preloader.style.opacity = '0';
+                preloader.style.transition = 'opacity 1s ease';
                 initApp();
-            }, 6000);
+            }, 11000);
 
-            // 6. Remove (7500ms)
-            setTimeout(() => { preloader.classList.add('gone'); }, 7500);
+            // Cleanup
+            setTimeout(() => {
+                preloader.style.display = 'none';
+            }, 12000);
         });
 
         function initApp() {
@@ -896,15 +781,11 @@
                     
                     if (query.length === 0) {
                         resultsBox.classList.remove('active');
-                        // Fix for mobile: Hide using Tailwind class
-                        if(index === 1) resultsBox.classList.add('hidden'); 
                         resultsBox.innerHTML = '';
                         return;
                     }
 
                     resultsBox.classList.add('active');
-                    // Fix for mobile: Show by removing Tailwind class
-                    if(index === 1) resultsBox.classList.remove('hidden');
                     
                     // Simulate AI Thinking
                     resultsBox.innerHTML = `
@@ -953,7 +834,6 @@
                                         openProductDetail(product);
                                         // Clear search
                                         resultsBox.classList.remove('active');
-                                        if(index === 1) resultsBox.classList.add('hidden'); // Also hide mobile
                                         input.value = '';
                                     }
                                 });
@@ -990,10 +870,10 @@
                                 ? `<img src="${p.image}" class="w-full h-full object-cover" alt="${p.name}">` 
                                 : `<i data-lucide="${p.image}" class="w-20 h-20 text-brand-800/80 group-hover:text-brand-600 transition-colors"></i>`
                              }
-                         </div>
-                         <div class="absolute bottom-4 right-4 flex gap-2 opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 z-20">
+                          </div>
+                          <div class="absolute bottom-4 right-4 flex gap-2 opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 z-20">
                              <button class="p-3 bg-white text-brand-900 rounded-full shadow-lg hover:bg-brand-50 hover:scale-110 transition-transform" onclick="event.stopPropagation()"><i data-lucide="shopping-bag" width="18"></i></button>
-                         </div>
+                          </div>
                     </div>
                     <div>
                         <h3 class="font-bold text-lg text-brand-900 font-serif">${p.name}</h3>
@@ -1024,6 +904,6 @@
             const deals = document.getElementById('deals');
             if(deals) deals.scrollIntoView({behavior: 'smooth', block: 'start'});
         }
-    </script>
+    </script>     
 </body>
 </html>
